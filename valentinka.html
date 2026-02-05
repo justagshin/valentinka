@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>С Днём Святого Валентина! ❤️</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #2d1b4e 0%, #5a2d6b 50%, #a33d6e 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #fff;
+            position: relative;
+        }
+        
+        /* ПАДАЮЩИЕ СЕРДЕЧКИ */
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .falling-heart {
+            position: absolute;
+            color: rgba(255, 133, 162, 0.7);
+            font-size: 20px;
+            animation: fall linear infinite;
+            top: -50px;
+        }
+        
+        @keyframes fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* ОСНОВНОЙ КОНТЕЙНЕР */
+        .game-container {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        /* МЕСТО ДЛЯ ФОТО КРЫСЫ - ПО ШИРИНЕ ВОПРОСА */
+        .rat-photo-container {
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        
+        .rat-photo {
+            width: 100%;
+            height: 500px;
+            background: linear-gradient(135deg, rgba(255, 182, 193, 0.3), rgba(255, 105, 180, 0.3));
+            border: 3px solid #ff69b4;
+            border-radius: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(255, 20, 147, 0.3);
+        }
+        
+        .rat-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .rat-placeholder {
+            text-align: center;
+            color: #ffb6c1;
+            padding: 20px;
+        }
+        
+        .rat-placeholder .icon {
+            font-size: 5em;
+            margin-bottom: 15px;
+        }
+        
+        .rat-placeholder .text {
+            font-size: 1.3em;
+            font-weight: 500;
+        }
+        
+        /* ВОПРОС */
+        .question-section {
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .question-box {
+            width: 100%;
+            background: linear-gradient(180deg, #ff8fab 0%, #d4567a 50%, #ff8fab 100%);
+            border: 3px solid #ff69b4;
+            border-radius: 50px;
+            padding: 30px 40px;
+            margin-bottom: 30px;
+            position: relative;
+            box-shadow: 
+                0 10px 30px rgba(255, 20, 147, 0.4),
+                inset 0 2px 10px rgba(255, 255, 255, 0.3);
+            text-align: center;
+        }
+        
+        .question-box::before,
+        .question-box::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 30px;
+            height: 60px;
+            background: #2d1b4e;
+            transform: translateY(-50%);
+            border-radius: 50%;
+        }
+        
+        .question-box::before {
+            left: -15px;
+            border-right: 3px solid #ff69b4;
+        }
+        
+        .question-box::after {
+            right: -15px;
+            border-left: 3px solid #ff69b4;
+        }
+        
+        .question-text {
+            font-size: clamp(1.3em, 4vw, 1.8em);
+            font-weight: 600;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            line-height: 1.4;
+        }
+        
+        /* ВАРИАНТЫ ОТВЕТОВ */
+        .answers-container {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 600px) {
+            .answers-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .rat-photo {
+                height: 280px;
+            }
+        }
+        
+        .answer-btn {
+            background: linear-gradient(180deg, #ff8fab 0%, #d4567a 50%, #ff8fab 100%);
+            border: 2px solid #ff69b4;
+            border-radius: 30px;
+            padding: 20px 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #fff;
+            font-size: 1.1em;
+            font-weight: 500;
+            position: relative;
+            box-shadow: 
+                0 5px 15px rgba(255, 20, 147, 0.3),
+                inset 0 1px 5px rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+            text-align: left;
+        }
+        
+        .answer-btn::before,
+        .answer-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 15px;
+            height: 30px;
+            background: #2d1b4e;
+            transform: translateY(-50%);
+            border-radius: 50%;
+        }
+        
+        .answer-btn::before {
+            left: -8px;
+            border-right: 2px solid #ff69b4;
+        }
+        
+        .answer-btn::after {
+            right: -8px;
+            border-left: 2px solid #ff69b4;
+        }
+        
+        .answer-btn:hover:not(.disabled) {
+            background: linear-gradient(180deg, #ffb3c6 0%, #e0678a 50%, #ffb3c6 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 20, 147, 0.5);
+        }
+        
+        .answer-btn:active:not(.disabled) {
+            transform: translateY(0);
+        }
+        
+        .answer-letter {
+            background: #ffd700;
+            color: #000;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2em;
+            flex-shrink: 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        
+        /* СОСТОЯНИЯ КНОПОК */
+        .answer-btn.selected {
+            background: linear-gradient(180deg, #ffd700 0%, #ffb700 50%, #ff8c00 100%) !important;
+            border-color: #ffaa00;
+            animation: glow-gold 1.5s infinite;
+        }
+        
+        .answer-btn.correct {
+            background: linear-gradient(180deg, #27ae60 0%, #2ecc71 50%, #229954 100%) !important;
+            border-color: #00ff88;
+            animation: pulse-green 1s infinite;
+        }
+        
+        .answer-btn.disabled {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+        
+        @keyframes glow-gold {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
+            50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.9); }
+        }
+        
+        @keyframes pulse-green {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 136, 0.6); }
+            50% { box-shadow: 0 0 40px rgba(0, 255, 136, 0.9); }
+        }
+        
+        /* ЭКРАН ПОБЕДЫ */
+        .win-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(45, 27, 78, 0.98);
+            z-index: 1000;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .win-screen.active {
+            display: flex;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .win-hearts {
+            font-size: 5em;
+            margin-bottom: 20px;
+            animation: heartbeat 1.5s infinite;
+        }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        .win-title {
+            font-size: 2.5em;
+            color: #ff69b4;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+        }
+        
+        .win-text {
+            font-size: 1.3em;
+            color: #fff;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .win-btn {
+            background: linear-gradient(180deg, #ff8fab, #d4567a);
+            border: 3px solid #ff69b4;
+            padding: 20px 50px;
+            font-size: 1.3em;
+            border-radius: 50px;
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255, 20, 147, 0.4);
+            transition: transform 0.3s;
+        }
+        
+        .win-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* МОДАЛЬНОЕ ОКНО */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+        }
+        
+        .modal img {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 20px;
+            border: 3px solid #ff69b4;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            font-size: 2.5em;
+            color: #fff;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Падающие сердечки -->
+    <div class="hearts-container" id="heartsContainer"></div>
+    
+    <!-- Модальное окно -->
+    <div class="modal" id="photoModal" onclick="closeModal()">
+        <div class="modal-content">
+            <div class="modal-close">×</div>
+            <img id="modalImg" src="" alt="Крыса-миллионер">
+        </div>
+    </div>
+    
+    <!-- Экран победы -->
+    <div class="win-screen" id="winScreen">
+        <div class="win-hearts">💕❤️💖</div>
+        <div class="win-title">Эх, какое счастье!</div>
+        <div class="win-text">
+            В таком случае, буду ждать тебя 14 февраля в 17:00 в Бардаке!<br>
+            Не забудь принести из Милана улыбку!<br>
+            Я тебя невероятно сильно люблю, Настюша!
+        </div>
+        <button class="win-btn" onclick="closeWinScreen()">Я СОГЛАСНА! ❤️</button>
+    </div>
+    
+    <div class="game-container">
+        <!-- ФОТО КРЫСЫ - ПО ШИРИНЕ КАК ВОПРОС -->
+        <div class="rat-photo-container">
+            <div class="rat-photo" onclick="openModal('https://i.imgur.com/placeholder.jpg')" id="ratPhotoContainer">
+                <!-- ЗДЕСЬ ВСТАВЛЯЙ ССЫЛКУ НА ФОТО КРЫСЫ -->
+                <img src="https://thumb.cloud.mail.ru/weblink/thumb/xw1/BxVB/4UYNx8Rvt?mt=1770327398000" 
+                     alt="Крыса-миллионер" 
+                     id="ratImage"
+                     onerror="this.style.display='none'; document.getElementById('ratPlaceholder').style.display='flex';"
+                     onload="this.style.display='block'; document.getElementById('ratPlaceholder').style.display='none';">
+                
+                <div class="rat-placeholder" id="ratPlaceholder" style="display: none;">
+                    <div class="icon">🐭</div>
+                    <div class="text">Здесь будет крыса-миллионер</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ВОПРОС -->
+        <div class="question-section">
+            <div class="question-box">
+                <div class="question-text">Будешь ли ты моей Валентинкой?</div>
+            </div>
+            
+            <!-- ВАРИАНТЫ ОТВЕТОВ -->
+            <div class="answers-container">
+                <button class="answer-btn" onclick="selectAnswer(this, 'A')">
+                    <span class="answer-letter">A</span>
+                    <span>Да, с удовольствием!</span>
+                </button>
+                <button class="answer-btn" onclick="selectAnswer(this, 'B')">
+                    <span class="answer-letter">B</span>
+                    <span>A</span>
+                </button>
+                <button class="answer-btn" onclick="selectAnswer(this, 'C')">
+                    <span class="answer-letter">C</span>
+                    <span>B</span>
+                </button>
+                <button class="answer-btn" onclick="selectAnswer(this, 'D')">
+                    <span class="answer-letter">D</span>
+                    <span>C</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let selectedAnswer = null;
+        
+        // Создание падающих сердечек
+        function createHearts() {
+            const container = document.getElementById('heartsContainer');
+            const symbols = ['❤️', '💖', '💕', '💗', '💓', '💝', '😍'];
+            
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'falling-heart';
+                heart.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDuration = (Math.random() * 5 + 8) + 's';
+                heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                heart.style.opacity = Math.random() * 0.5 + 0.3;
+                container.appendChild(heart);
+                
+                setTimeout(() => {
+                    heart.remove();
+                }, 13000);
+            }, 800);
+        }
+        
+        // Модальное окно для увеличения фото
+        function openModal(src) {
+            // Если фото не загрузилось, не открываем модалку
+            if (src.includes('placeholder')) return;
+            
+            document.getElementById('modalImg').src = src;
+            document.getElementById('photoModal').classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('photoModal').classList.remove('active');
+        }
+        
+        // Выбор ответа
+        function selectAnswer(btn, letter) {
+            if (selectedAnswer) return;
+            selectedAnswer = letter;
+            
+            btn.classList.add('selected');
+            document.querySelectorAll('.answer-btn').forEach(b => b.classList.add('disabled'));
+            
+            setTimeout(() => {
+                btn.classList.remove('selected');
+                btn.classList.add('correct');
+                
+                if (navigator.vibrate) {
+                    navigator.vibrate([100, 100, 100, 300]);
+                }
+                
+                createHeartConfetti();
+                
+                setTimeout(() => {
+                    document.getElementById('winScreen').classList.add('active');
+                }, 1500);
+                
+            }, 2000);
+        }
+        
+        // Конфетти
+        function createHeartConfetti() {
+            const symbols = ['❤️', '💖', '💕', '💗', '💓'];
+            const colors = ['#ff69b4', '#ff1493', '#ffb6c1', '#ffd700', '#ff8fab'];
+            
+            for (let i = 0; i < 60; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                    confetti.style.position = 'fixed';
+                    confetti.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.top = '-50px';
+                    confetti.style.zIndex = '9999';
+                    confetti.style.pointerEvents = 'none';
+                    confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
+                    confetti.style.filter = `drop-shadow(0 0 10px ${colors[Math.floor(Math.random() * colors.length)]})`;
+                    document.body.appendChild(confetti);
+                    setTimeout(() => confetti.remove(), 5000);
+                }, i * 30);
+            }
+        }
+        
+        function closeWinScreen() {
+            document.getElementById('winScreen').classList.remove('active');
+            selectedAnswer = null;
+            document.querySelectorAll('.answer-btn').forEach(b => {
+                b.classList.remove('selected', 'correct', 'disabled');
+            });
+        }
+        
+        window.addEventListener('load', createHearts);
+    </script>
+</body>
+</html>
